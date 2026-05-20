@@ -64,4 +64,4 @@ if __name__ == "__main__":
 
     # Imprimir el reporte final
     centro = models[0] # El nodo 1 es el centro y está en el índice 0
-    print(f"Total de peticiones atendidas favorablemente: {centro.atendidas}")
+    print(f"Total de peticiones atendidas: {centro.atendidas}")

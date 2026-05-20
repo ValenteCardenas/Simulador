@@ -76,8 +76,6 @@ if __name__ == "__main__":
 
     experiment.run()
 
-    # Imprimir el reporte final
     centro = models[0] # El nodo 1 es el centro y está en el índice 0
-    print("\n--- SIMULACIÓN TERMINADA ---")
-    print(f"Total de peticiones atendidas favorablemente: {centro.atendidas}")
+    print(f"Total de peticiones atendidas: {centro.atendidas}")
     print(f"Número de recursos restantes: {centro.recursos}")
