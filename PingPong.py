@@ -21,6 +21,7 @@ class AlgorithmPingPong(Model):
     # Aqui se definen e inicializan los atributos particulares del algoritmo
     print ("Inicio funciones", self.id)
     self.sucesor = self.neighbors[0]
+    self.mensajes = 0
     print ("Mi vecino es:", self.sucesor)
 
    #c. Para que el proceso tarde un númeor aleatorio entre 1 y 4 unidades de tiempo
@@ -33,15 +34,17 @@ class AlgorithmPingPong(Model):
        print ("[", self.id, "]: recibi INICIA en t=",self.clock," \n")
        newevent = Event("PING", self.clock + rd.randint(1, 4), self.sucesor, self.id)
        self.transmit(newevent)
+       self.mensajes += 1
     elif  event.getName() == "PING":
        print ("[", self.id, "]: recibi PING en t=",self.clock," \n")
        newevent = Event("PONG", self.clock + rd.randint(1, 4), self.sucesor, self.id)
        self.transmit(newevent)
+       self.mensajes += 1
     else:      
        print ("[", self.id, "]: recibi PONG en t=",self.clock," \n")
        newevent = Event("PING", self.clock + rd.randint(1, 4), self.sucesor, self.id)
        self.transmit(newevent)
-  
+       self.mensajes += 1
 
 # ----------------------------------------------------------------------------------------
 # "main()"
@@ -66,12 +69,16 @@ for i in range(1,len(experiment.graph)+1):
 # para que al recibirlo, el nodo 2 ejecute la parte del codigo que corresponde
 # a ese evento, y asi inicie el proceso de ping pong.
 
+# seed = Event("INICIA", 0.0, 2, 2)
+
 #d.Para que el proceso inicie de manera aleatoria utilizaremos randint
-#Dentro del metodo rand también podríamos usar len(experiment.graph) para que el 
+#También podríamos usar len(experiment.graph) para que el 
 #proceso se inicie en un nodo aleatorio de nuestro grafo, pero como solo tenemos 2 
 #nodos, asignamos el valor 2 directamente.
 seed = Event("INICIA", 0.0, rd.randint(1,2), rd.randint(1,2))
 experiment.init(seed)
 experiment.run()
+
+print ("Total de mensajes transmitidos:", experiment.getTotalTransmissions())
 
 
