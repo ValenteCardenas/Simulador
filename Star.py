@@ -32,7 +32,7 @@ class AlgorithmStar(Model):
                 sender = event.source
                 print(f"[t={self.clock}] Centro recibe TRIS de Nodo {sender}.")
                 newevent = Event("TRAS", self.clock + 1.0, sender, self.id)
-                
+                self.atendidas += 1
                 self.transmit(newevent)
 
         elif event.getName() == "TRAS":
