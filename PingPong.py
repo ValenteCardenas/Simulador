@@ -79,6 +79,12 @@ seed = Event("INICIA", 0.0, rd.randint(1,2), rd.randint(1,2))
 experiment.init(seed)
 experiment.run()
 
-print ("Total de mensajes transmitidos:", experiment.getTotalTransmissions())
+total_mensajes = 0
+for i in range(1, len(experiment.table)):
+    m = experiment.table[i].model
+    print("Nodo", i, "envió:", m.mensajes, "mensajes")
+    total_mensajes += m.mensajes
+
+print("Total general de mensajes transmitidos:", total_mensajes)
 
 
