@@ -79,6 +79,13 @@ seed = Event("INICIA", 0.0, rd.randint(1,2), rd.randint(1,2))
 experiment.init(seed)
 experiment.run()
 
+#Para poder contar el número de mensajes transmitidos por cada nodo, se accede a la tabla 
+#de modelos de la simulación, y se imprime el número de mensajes transmitidos por cada 
+#nodo, sumando el total general al final.
+# .table es un diccionario que contiene los modelos asociados a cada nodo, y se accede 
+# a cada modelo para obtener el número de mensajes transmitidos, que se almacena en el 
+# atributo "mensajes" de cada modelo.    
+
 total_mensajes = 0
 for i in range(1, len(experiment.table)):
     m = experiment.table[i].model
