@@ -61,44 +61,6 @@ for i in range(1, len(experiment.graph) + 1):
     m = AlgoritmAnilloLCR()
     experiment.setModel(m, i)
 
-# a. El mejor caso en mensajes
-# Se da cuando SOLO UN NODO arranca la elección (y no despierta a nadie más con su mensaje
-# si los demás no inician por su cuenta, o si simplemente ignoran los menores). 
-# Otra forma del mejor caso es que todos inicien pero el anillo esté ordenado ascendentemente.
-# Con un solo nodo iniciando, generará N mensajes de elección y N de electo (2N en total).
-# for i in [1]: 
-#seed = Event("INICIA", 0.0, i, i, 0)
-#experiment.init(seed)
-
-# b. El mejor caso en tiempo
-# Se da cuando todos los nodos inician al mismo tiempo (t=0.0). Las candidaturas menores
-# se descartan rápido en red y el nodo de mayor id comienza a circular inmediatamente, 
-# tomando exactamente 2N unidades de tiempo (N para dar la vuelta, N para anunciar).
-# for i in range(1, len(experiment.graph) + 1):
-#     seed = Event("INICIA", 0.0, i, i, 0)
-#     experiment.init(seed)
-
-# c. El peor caso en mensajes
-# Se da cuando TODOS los nodos inician la elección al mismo tiempo (t=0.0) y además
-# están ubicados en ORDEN DESCENDENTE en la dirección del anillo (ej. 6->5->4->3->2->1).
-# El nodo 6 da N pasos, el 5 da N-1 pasos, el 4 da N-2 pasos... generando O(N^2) mensajes.
-# Para correrlo necesitas un .txt ordenado al revés y activarlos todos:
-# for i in range(1, len(experiment.graph) + 1):
-#     seed = Event("INICIA", 0.0, i, i, 0)
-#     experiment.init(seed)
-
-# d. El peor caso en tiempo
-# ¡Exacto! Ocurre cuando el nodo con el SEGUNDO ID más grande (ej. 5) despierta primero,
-# y topológicamente está a N-1 de distancia del nodo de MAYOR ID (ej. 6), de forma
-# que el mensaje da casi toda la vuelta. Justo antes de recibirlo (t = N-1), el
-# nodo mayor (6) se despierta e inicia su proceso.
-# Para un anillo 5->4->3->2->1->6(->5), donde N=6:
-# seed1 = Event("INICIA", 0.0, 5, 5, 0)
-# seed2 = Event("INICIA", 5.0, 6, 6, 0) # El 6 se despierta en t=N-1
-# experiment.init(seed1)
-# experiment.init(seed2)
-
-# Elegimos los nodos 1 y 2 para despertarse al mismo tiempo
 for i in [random.randint(1, len(experiment.graph)), random.randint(1, len(experiment.graph))]:
     seed = Event("INICIA", 0.0, i, i, 0)
     experiment.init(seed) 
