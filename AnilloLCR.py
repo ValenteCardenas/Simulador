@@ -65,5 +65,4 @@ for i in [random.randint(1, len(experiment.graph)), random.randint(1, len(experi
     seed = Event("INICIA", 0.0, i, i, 0)
     experiment.init(seed) 
 
-# Se corre la simulación una sola vez, DESPUÉS de haber encolado los eventos iniciales
 experiment.run()

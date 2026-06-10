@@ -42,10 +42,7 @@ class AlgorithmAnillo(Model):
             newevent = Event("LIBERA", self.clock + 1.0, self.id, self.id)
             self.transmit(newevent)
         
-
-# ----------------------------------------------------------------------------------------
-# "main()"
-# ----------------------------------------------------------------------------------------
+##main
 if len(sys.argv) != 2:
    print ("Por favor proporcione el nombre de la grafica de comunicaciones")
    raise SystemExit(1)
@@ -60,9 +57,9 @@ for i in range(1, len(experiment.graph) + 1):
     seed2 = Event("SOLICITUD", 0.0, i, i)
     experiment.init(seed2)
 
-genera_token = random.randint(1, len(experiment.graph))   # Genera un token para un nodo aleatorio
+genera_token = random.randint(1, len(experiment.graph))   
 print(f"El token lo genera el nodo {genera_token}.")
-seed = Event("TOKEN", 0.0, genera_token, genera_token)  # El nodo que recibe el token es el mismo que lo genera
+seed = Event("TOKEN", 0.0, genera_token, genera_token)  
 experiment.init(seed)
 
 experiment.run()

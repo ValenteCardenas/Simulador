@@ -8,17 +8,16 @@ class Event:                   # Descendiente de la clase "object" (default)
     contiene tambien un constructor y los metodos que devuelven cada
     uno de los atributos individuales """
     
-    def __init__(self, name, time, target, source, id_lider):
+    def __init__(self, name, time, target, source):
         """ Construye una instancia con los atributos inicializados """
         self.name   = name
         self.time   = time        
         self.target = target        
         self.source = source
-        self.id_lider = id_lider
+        
 		
     def getName(self):
-        tupla = (self.name, self.id_lider)
-        return tupla
+        return self.name
 		
     def getTime(self):
         """ Devuelve el tiempo en el que debe ocurrir el evento """

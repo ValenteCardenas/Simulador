@@ -61,7 +61,7 @@ for i in range(1, len(experiment.graph) + 1):
     m = AlgoritmAnilloLCR()
     experiment.setModel(m, i)
 
-seed = Event("INICIA", 0.0, i, i, 0)
+seed = Event("INICIA", 0.0, 6, 6, 0)
 experiment.init(seed)
 
 experiment.run()
