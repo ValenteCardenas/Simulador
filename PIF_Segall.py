@@ -40,12 +40,12 @@ class AlgoritnmPIFShegall(Model):
 
             
             if all(self.ok[n] for n in self.neighbors):
+                AlgoritnmPIFShegall.tiempo_final = self.clock
                 if self.padre != self.id:
                     print(f"[t={self.clock}] Nodo {self.id} envia M a {self.padre}")
                     newevent = Event("M", self.clock + 1, self.padre, self.id)
                     self.transmit(newevent)
                     AlgoritnmPIFShegall.total_mensajes += 1
-                    AlgoritnmPIFShegall.tiempo_final = self.clock
 
                     
 

@@ -52,7 +52,6 @@ class AlgoritnmPIFShegall(Model):
                 self.descendientes[j] = AlgoritnmPIFShegall.info_descendientes.get(j, set())
 
             if all(self.ok[n] for n in self.neighbors):
-                # Calcular el conjunto total de descendientes de este nodo
                 todos_desc = set()
                 for h in self.hijos:
                     todos_desc.add(h)
@@ -170,10 +169,6 @@ AlgoritnmPIFShegall.rutas[(3, 25.0, 3)] = (3, 99)
 test2 = Event("MSG", 25.0, 3, 3)
 experiment.init(test2)
 
-# Prueba 3: Nodo 2 envia mensaje al nodo 7
-AlgoritnmPIFShegall.rutas[(2, 35.0, 2)] = (2, 7)
-test3 = Event("MSG", 35.0, 2, 2)
-experiment.init(test3)
 
 experiment.run()
 
