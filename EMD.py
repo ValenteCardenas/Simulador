@@ -17,8 +17,12 @@ class AlgoritmEMD(Model):
         self.Solicitud_Pendiente = {}
     def receive(self, event):
         if event.getName() == "INICIA":
-            if self.lanzar_moneda():
-                self.DLOCK()
+            if not self.Solicitud_EM:  # Solo intenta si no esta ya en proceso de solicitar
+                if self.lanzar_moneda():
+                    self.DLOCK()
+                else:
+                    # Si no quiso pedir la SC, vuelve a intentarlo mas adelante
+                    self.transmit(Event("INICIA", self.clock + 1.0, self.id, self.id))
 
         elif event.getName() == "REQUEST":
             tpeticion_remota = getattr(event, "tpeticion", 0)
@@ -41,14 +45,11 @@ class AlgoritmEMD(Model):
 
         elif event.getName() == "LIBERA":
             self.DUNLOCK()
+            # Una vez que sale de la seccion critica, vuelve a iniciar el ciclo de intentos
+            self.transmit(Event("INICIA", self.clock + 2.0, self.id, self.id))
         
     def lanzar_moneda(self):
-        lanzar_moneda = random.choice([1,2,3,4])
-        elegir = random.choice([1,2,3,4])  
-        if lanzar_moneda == elegir:
-            return True
-        else:
-            return False
+        return random.random() < 0.20
     
     def DLOCK(self):
         self.Solicitud_EM = True
