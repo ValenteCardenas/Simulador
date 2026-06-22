@@ -17,11 +17,11 @@ class AlgoritmEMD(Model):
         self.Solicitud_Pendiente = {}
     def receive(self, event):
         if event.getName() == "INICIA":
-            if not self.Solicitud_EM:  # Solo intenta si no esta ya en proceso de solicitar
+            if not self.Solicitud_EM:  
                 if self.lanzar_moneda():
                     self.DLOCK()
                 else:
-                    # Si no quiso pedir la SC, vuelve a intentarlo mas adelante
+                    # Si no quiso pedir la seccion critica, vuelve a intentarlo mas adelante
                     self.transmit(Event("INICIA", self.clock + 1.0, self.id, self.id))
 
         elif event.getName() == "REQUEST":
