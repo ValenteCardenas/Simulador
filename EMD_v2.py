@@ -18,7 +18,8 @@ class AlgoritmEMD(Model):
                     self.DLOCK()
                 else:
                     # Si no quiso pedir la seccion critica, vuelve a intentarlo mas adelante
-                    self.transmit(Event("INICIA", self.clock + 1.0, self.id, self.id))
+                    #self.transmit(Event("INICIA", self.clock + 1.0, self.id, self.id))
+                    pass
 
         elif event.getName() == "REQUEST":
             tpeticion_remota = getattr(event, "tpeticion", 0)
@@ -43,11 +44,11 @@ class AlgoritmEMD(Model):
 
         elif event.getName() == "LIBERA":
             self.DUNLOCK()
-            # Una vez que sale de la seccion critica, vuelve a iniciar el ciclo de intentos
-            self.transmit(Event("INICIA", self.clock + 2.0, self.id, self.id))
+            # Ya no se reinicia el ciclo de intentos para realizar solo una petición por nodo
+            # self.transmit(Event("INICIA", self.clock + 2.0, self.id, self.id))
         
     def lanzar_moneda(self):
-        return random.random() < 0.20
+        return random.random() <= 1
     
     def DLOCK(self):
         self.Solicitud_EM = True
@@ -84,8 +85,10 @@ for i in range(1, len(experiment.graph) + 1):
     m = AlgoritmEMD()
     experiment.setModel(m, i)
 
+# Solo los nodos 1, 3 y 4 se inicializan con la solicitud (evento INICIA)
 for i in range(1, len(experiment.graph) + 1):
-    seed = Event("INICIA", 0.0, i, i)
-    experiment.init(seed)
+    if i in [1, 3, 4]:
+        seed = Event("INICIA", 0.0, i, i)
+        experiment.init(seed)
 
 experiment.run()
