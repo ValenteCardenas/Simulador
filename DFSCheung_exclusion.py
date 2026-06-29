@@ -149,7 +149,7 @@ for i in range(1, len(experiment.graph) + 1):
 seed_dfs = Event("INICIA", 0.0, 1, 1)
 experiment.init(seed_dfs)
 
-# Generar solicitudes aleatorias para todos los nodos
+
 for i in range(1, len(experiment.graph) + 1):
     seed_solicitud = Event("SOLICITUD", 0.0, i, i)
     experiment.init(seed_solicitud)
