@@ -8,12 +8,13 @@ class Event:                   # Descendiente de la clase "object" (default)
     contiene tambien un constructor y los metodos que devuelven cada
     uno de los atributos individuales """
     
-    def __init__(self, name, time, target, source):
+    def __init__(self, name, time, target, source, payload=None):
         """ Construye una instancia con los atributos inicializados """
         self.name   = name
         self.time   = time        
         self.target = target        
         self.source = source
+        self.payload = payload
         
 		
     def getName(self):
@@ -30,4 +31,8 @@ class Event:                   # Descendiente de la clase "object" (default)
     def getSource(self):
         """ Devuelve la identidad del proceso que origina el evento """
         return (self.source)
+
+    def getPayload(self):
+        """ Devuelve el contenido transportado por el evento, si existe """
+        return (self.payload)
 	

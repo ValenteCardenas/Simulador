@@ -1,0 +1,14 @@
+{
+  "id": 3,
+  "padre": 3,
+  "visitado": false,
+  "sin_visitar": [
+    1,
+    2
+  ],
+  "edo_canal": {
+    "1": [],
+    "2": []
+  },
+  "pendientes": 1
+}
