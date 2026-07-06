@@ -9,6 +9,8 @@ from simulation import Simulation
 class AlgoritmCheungLamport(Model):
     total_mesajes = 0
     total_tiempo = 0
+    estados_locales = {}
+    estados_canales = {}
     def init(self):
         #Variables Cheung
         self.visitado = False
@@ -45,6 +47,7 @@ class AlgoritmCheungLamport(Model):
         )
         with open(nombre_archivo, "w", encoding="utf-8") as archivo:
             json.dump(self.chl_mi_estado, archivo, ensure_ascii=False, indent=2)
+        AlgoritmCheungLamport.estados_locales[self.id] = self.chl_mi_estado
         print(f"Soy el nodo {self.id} y mi estado es {self.chl_mi_estado}")
 
     def chl_inicia_foto(self):
@@ -160,6 +163,18 @@ class AlgoritmCheungLamport(Model):
                     f"Soy el nodo {self.id} y termine la toma de estado global. "
                     f"Estado: {self.chl_mi_estado}"
                 )
+                AlgoritmCheungLamport.estados_canales[self.id] = {
+                    vecino: list(msgs)
+                    for vecino, msgs in self.chl_edo_canal.items()
+                }
+                if len(AlgoritmCheungLamport.estados_canales) == len(AlgoritmCheungLamport.estados_locales):
+                    estado_global = {
+                        "estados_locales": AlgoritmCheungLamport.estados_locales,
+                        "estados_canales": AlgoritmCheungLamport.estados_canales,
+                    }
+                    with open("estado_global.json", "w", encoding="utf-8") as f:
+                        json.dump(estado_global, f, ensure_ascii=False, indent=2)
+                    print("=== ESTADO GLOBAL guardado en estado_global.json ===")
 
 #       elif nombre == "chl_m":
 #            if self.chl_estado_guardado and not self.chl_canales_marcados[origen]:
