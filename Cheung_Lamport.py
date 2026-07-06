@@ -161,9 +161,9 @@ class AlgoritmCheungLamport(Model):
                     f"Estado: {self.chl_mi_estado}"
                 )
 
-        elif nombre == "chl_m":
-            if self.chl_estado_guardado and not self.chl_canales_marcados[origen]:
-                self.chl_edo_canal[origen].append(event.getPayload())
+#       elif nombre == "chl_m":
+#            if self.chl_estado_guardado and not self.chl_canales_marcados[origen]:
+#                self.chl_edo_canal[origen].append(event.getPayload())
 
 
 ###main

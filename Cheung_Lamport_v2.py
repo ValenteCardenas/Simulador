@@ -83,7 +83,6 @@ class AlgoritmCheungLamport(Model):
         nombre = event.getName()
         origen = event.getSource()
 
-        # ── INICIA ────────────────────────────────────────────────────────
         # Solo inicia el DFS de Cheung. La toma de estado global se dispara
         # con el evento chl_INICIA_FOTO sembrado en el instante Teg.
         if nombre == "INICIA":
@@ -91,14 +90,12 @@ class AlgoritmCheungLamport(Model):
             self.padre = self.id
             self.continua_exploracion()
 
-        # ── chl_INICIA_FOTO ──────────────────────────────────────────────
         # Evento sembrado en el instante Teg para disparar la toma de
         # estado global de Chandy-Lamport en el nodo que lo recibe.
         elif nombre == "chl_INICIA_FOTO":
             if not self.chl_estado_guardado:
                 self.chl_inicia_foto()
 
-        # ── DESCUBRE ──────────────────────────────────────────────────────
         elif nombre == "DESCUBRE":
             # [Chandy-Lamport] Registrar mensaje aplicativo en transito
             if self.chl_estado_guardado and not self.chl_canales_marcados[origen]:
@@ -116,7 +113,6 @@ class AlgoritmCheungLamport(Model):
                 self.padre = origen
                 self.continua_exploracion()
 
-        # ── RECHAZO ───────────────────────────────────────────────────────
         elif nombre == "RECHAZO":
             # [Chandy-Lamport] Registrar mensaje aplicativo en transito
             if self.chl_estado_guardado and not self.chl_canales_marcados[origen]:
@@ -124,7 +120,6 @@ class AlgoritmCheungLamport(Model):
 
             self.continua_exploracion()
 
-        # ── REGRESA ───────────────────────────────────────────────────────
         elif nombre == "REGRESA":
             # [Chandy-Lamport] Registrar mensaje aplicativo en transito
             if self.chl_estado_guardado and not self.chl_canales_marcados[origen]:
@@ -134,9 +129,7 @@ class AlgoritmCheungLamport(Model):
                 self.hijos.append(origen)
             self.continua_exploracion()
 
-        # ── ARBOL_LISTO ───────────────────────────────────────────────────
         elif nombre == "ARBOL_LISTO":
-            # [Chandy-Lamport] Registrar mensaje aplicativo en transito
             if self.chl_estado_guardado and not self.chl_canales_marcados[origen]:
                 self.chl_edo_canal[origen].append(nombre)
 
@@ -145,7 +138,6 @@ class AlgoritmCheungLamport(Model):
                 self.transmit(aviso)
                 AlgoritmCheungLamport.total_mesajes += 1
 
-        # ── chl_FOTO ──────────────────────────────────────────────────────
         elif nombre == "chl_FOTO":
             print(
                 f"Soy el nodo {self.id}: guardo estado del canal "
@@ -170,8 +162,6 @@ class AlgoritmCheungLamport(Model):
                     f"Soy el nodo {self.id} y termine la toma de estado global. "
                     f"Estado: {self.chl_mi_estado}"
                 )
-
-        # ── chl_m ─────────────────────────────────────────────────────────
         elif nombre == "chl_m":
             if self.chl_estado_guardado and not self.chl_canales_marcados[origen]:
                 self.chl_edo_canal[origen].append(event.getPayload())
@@ -183,17 +173,7 @@ if len(sys.argv) != 2:
     print("Por favor proporcione el nombre de la grafica de comunicaciones")
     raise SystemExit(1)
 
-grafo = sys.argv[1]
-maxtime = 50  # tiempo maximo de simulacion
-
-# ══════════════════════════════════════════════════════════════════════
-# Punto 2: Determinar el tiempo t que tarda la ejecucion del DFS
-# ══════════════════════════════════════════════════════════════════════
-print("=" * 60)
-print("PUNTO 2: Ejecucion DFS puro para determinar el tiempo t")
-print("=" * 60)
-
-experiment = Simulation(grafo, maxtime)
+experiment = Simulation(sys.argv[1], 50)
 for i in range(1, len(experiment.graph) + 1):
     m = AlgoritmCheungLamport()
     experiment.setModel(m, i)
@@ -205,9 +185,6 @@ t = AlgoritmCheungLamport.total_tiempo
 print(f"\nTotal de mensajes enviados: {AlgoritmCheungLamport.total_mesajes}")
 print(f"Tiempo total de exploracion (t): {t}")
 
-# ══════════════════════════════════════════════════════════════════════
-# Punto 3: Generar un numero aleatorio Teg entre 3 y t-3
-# ══════════════════════════════════════════════════════════════════════
 if t < 7:
     print(f"\nError: t={t} es demasiado pequeno para generar Teg en [3, t-3].")
     print("Elija un grafo mas grande.")
@@ -216,30 +193,18 @@ if t < 7:
 Teg = random.randint(3, int(t) - 3)
 print(f"\nPunto 3: Teg generado: {Teg}")
 
-# ══════════════════════════════════════════════════════════════════════
-# Punto 4: Sembrar el evento chl_INICIA_FOTO en el instante Teg
-# ══════════════════════════════════════════════════════════════════════
-print("\n" + "=" * 60)
-print(f"PUNTO 4: Ejecucion DFS + toma de estado global en Teg = {Teg}")
-print("=" * 60)
-
 num_nodos = len(experiment.graph)
 
-# Reiniciar contadores de clase
 AlgoritmCheungLamport.total_mesajes = 0
 AlgoritmCheungLamport.total_tiempo = 0
 
-# Crear nueva simulacion
-exp = Simulation(grafo, maxtime)
+exp = Simulation(sys.argv[1], 50)
 for i in range(1, num_nodos + 1):
     m = AlgoritmCheungLamport()
     exp.setModel(m, i)
-
-# Sembrar evento INICIA del DFS en t=0 dirigido al nodo 1
 seed_dfs = Event("INICIA", 0.0, 1, 1)
 exp.init(seed_dfs)
 
-# Sembrar evento chl_INICIA_FOTO en el instante Teg dirigido al nodo 1
 seed_foto = Event("chl_INICIA_FOTO", float(Teg), 1, 1)
 exp.init(seed_foto)
 
