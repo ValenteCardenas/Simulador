@@ -9,9 +9,11 @@ class AlgoritnmPIFShegallLimited(Model):
     def init(self):
         self.visitado = False
         self.padre = None
-        self.ok = {v: False for v in self.neighbors}
         self.maxTTL = -1
-    
+        self.productos = [len(random.randint(2, 10))]
+        for v in self.productos:
+            self.productos[v] = random.randint(1, 100)    
+
     def receive(self, event):
         if event.getName() == "INICIA":
             self.padre = self.id
@@ -29,9 +31,6 @@ class AlgoritnmPIFShegallLimited(Model):
             if (event.getPayload() > self.maxTTL):
                 self.maxTTL = event.getPayload()
                 self.padre = event.getSource()
-                for v in self.neighbors:
-                    self.ok[v] = False
-                self.ok[self.padre] = True
 
                 if (event.getPayload() > 0):
                     print(f"[t={self.clock}] Nodo {self.id} envia M a sus vecinos")
@@ -43,8 +42,6 @@ class AlgoritnmPIFShegallLimited(Model):
                     print(f"[t={self.clock}] Nodo {self.id} envia M a {self.padre}")
                     newevent = Event("M", self.clock + 1, self.padre, self.id, event.getPayload() -1)
                     self.transmit(newevent)
-            else:
-                self.ok[event.getSource()] = True
                 
             if (self.maxTTL > 0 and all(self.ok.values())):
                 if self.padre != self.id:
@@ -65,12 +62,13 @@ if len(sys.argv) != 2:
 
 experiment = Simulation(sys.argv[1], 10)
 TTL = 3
-
+Buscado = random.randint(1, 100)
+payload = [TTL, Buscado]
 for i in range(1, len(experiment.graph) + 1):
     m = AlgoritnmPIFShegallLimited()
     experiment.setModel(m, i)
 
-seed = Event("INICIA", 0.0, 1, 1, TTL)
+seed = Event("INICIA", 0.0, 1, 1, payload)
 experiment.init(seed)
 
 experiment.run()
