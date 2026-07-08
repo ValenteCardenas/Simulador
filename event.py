@@ -8,7 +8,7 @@ class Event:                   # Descendiente de la clase "object" (default)
     contiene tambien un constructor y los metodos que devuelven cada
     uno de los atributos individuales """
     
-    def __init__(self, name, time, target, source, payload=None):
+    def __init__(self, name, time, target, source, payload):
         """ Construye una instancia con los atributos inicializados """
         self.name   = name
         self.time   = time        
