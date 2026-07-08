@@ -4,7 +4,7 @@ from event import Event
 from model import Model
 from simulation import Simulation
 
-class AlgoritnmPIFShegall(Model):
+class AlgoritnmPIFShegallLimited(Model):
     total_mensajes = 0
     tiempo_final = 0
 
@@ -12,6 +12,7 @@ class AlgoritnmPIFShegall(Model):
         self.visitado = False
         self.padre = None
         self.ok = {v: False for v in self.neighbors}
+        self.maxTTL = -1
     
     def receive(self, event):
         if event.getName() == "INICIA":
@@ -23,30 +24,37 @@ class AlgoritnmPIFShegall(Model):
                     print(f"[t={self.clock}] Nodo {self.id} envia M a {v}")
                     newevent = Event("M", self.clock + 1, v, self.id)
                     self.transmit(newevent)
-                    AlgoritnmPIFShegall.total_mensajes += 1
+                    AlgoritnmPIFShegallLimited.total_mensajes += 1
 
         elif event.getName() == "M":
-            self.ok[event.getSource()] = True
-            if not self.visitado:
+            if (event.getPayload() > self.maxTTL):
+                self.maxTTL = event.getPayload()
                 self.padre = event.getSource()
-                print(f"[t={self.clock}] Soy nodo {self.id} mi padre es {event.getSource()}")
-                self.visitado = True
                 for v in self.neighbors:
-                    if v != self.padre:
-                        print(f"[t={self.clock}] Nodo {self.id} envia M a {v}")
-                        newevent = Event("M", self.clock + 1, v, self.id)
-                        self.transmit(newevent)
-                        AlgoritnmPIFShegall.total_mensajes += 1
+                    self.ok[v] = False
+                self.ok[self.padre] = True
 
-            
-            if all(self.ok[n] for n in self.neighbors):
-                AlgoritnmPIFShegall.tiempo_final = self.clock
-                if self.padre != self.id:
+                if (event.getPayload() > 0):
+                    print(f"[t={self.clock}] Nodo {self.id} envia M a sus vecinos")
+                    for v in self.neighbors:
+                        if v != self.padre:
+                            newevent = Event("M", self.clock + 1, v, self.id, event.getPayload() - 1)
+                            self.transmit(newevent)
+                else:
                     print(f"[t={self.clock}] Nodo {self.id} envia M a {self.padre}")
                     newevent = Event("M", self.clock + 1, self.padre, self.id)
                     self.transmit(newevent)
-                    AlgoritnmPIFShegall.total_mensajes += 1
-
+            else:
+                self.ok[event.getSource()] = True
+                newevent = Event("M", self.clock + 1, event.getSource(), self.id, event.getPayload())
+                self.transmit(newevent)
+            if (self.maxTTL > 0 and all(self.ok.values())):
+                if self.padre != self.id:
+                    print(f"[t={self.clock}] Nodo {self.id} envia M a {self.padre}")
+                    newevent = Event("M", self.clock + 1, self.padre, self.id, self.maxTTL)
+                    self.transmit(newevent)
+            
+            
                     
 
 ##main
@@ -58,7 +66,7 @@ if len(sys.argv) != 2:
 experiment = Simulation(sys.argv[1], 50)
 
 for i in range(1, len(experiment.graph) + 1):
-    m = AlgoritnmPIFShegall()
+    m = AlgoritnmPIFShegallLimited()
     experiment.setModel(m, i)
 
 seed = Event("INICIA", 0.0, 1, 1)
@@ -66,6 +74,6 @@ experiment.init(seed)
 
 experiment.run()
 
-print(f"\nTotal de mensajes enviados: {AlgoritnmPIFShegall.total_mensajes}")
-print(f"Costo en tiempo (unidades): {AlgoritnmPIFShegall.tiempo_final}")
+print(f"\nTotal de mensajes enviados: {AlgoritnmPIFShegallLimited.total_mensajes}")
+print(f"Costo en tiempo (unidades): {AlgoritnmPIFShegallLimited.tiempo_final}")
 
