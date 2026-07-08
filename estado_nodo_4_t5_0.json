@@ -1,15 +1,14 @@
 {
-  "id": 1,
-  "padre": 1,
+  "id": 4,
+  "padre": 3,
   "visitado": true,
   "sin_visitar": [
-    3,
-    4
+    5
   ],
   "chl_edo_canal": {
-    "2": [],
+    "1": [],
     "3": [],
-    "4": []
+    "5": []
   },
-  "chl_pendientes": 3
+  "chl_pendientes": 2
 }

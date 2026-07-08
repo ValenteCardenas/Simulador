@@ -3,7 +3,6 @@
   "padre": 1,
   "visitado": true,
   "sin_visitar": [
-    3,
     4
   ],
   "chl_edo_canal": {

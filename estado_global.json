@@ -1,0 +1,125 @@
+{
+  "estados_locales": {
+    "1": {
+      "id": 1,
+      "padre": 1,
+      "visitado": true,
+      "sin_visitar": [
+        4
+      ],
+      "chl_edo_canal": {
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "chl_pendientes": 3
+    },
+    "2": {
+      "id": 2,
+      "padre": 1,
+      "visitado": true,
+      "sin_visitar": [],
+      "chl_edo_canal": {
+        "1": []
+      },
+      "chl_pendientes": 0
+    },
+    "3": {
+      "id": 3,
+      "padre": 1,
+      "visitado": true,
+      "sin_visitar": [],
+      "chl_edo_canal": {
+        "1": [],
+        "4": []
+      },
+      "chl_pendientes": 1
+    },
+    "4": {
+      "id": 4,
+      "padre": 3,
+      "visitado": true,
+      "sin_visitar": [
+        5
+      ],
+      "chl_edo_canal": {
+        "1": [],
+        "3": [],
+        "5": []
+      },
+      "chl_pendientes": 2
+    },
+    "5": {
+      "id": 5,
+      "padre": 5,
+      "visitado": false,
+      "sin_visitar": [
+        4,
+        6
+      ],
+      "chl_edo_canal": {
+        "4": [],
+        "6": []
+      },
+      "chl_pendientes": 1
+    },
+    "6": {
+      "id": 6,
+      "padre": 6,
+      "visitado": false,
+      "sin_visitar": [
+        7,
+        5
+      ],
+      "chl_edo_canal": {
+        "7": [],
+        "5": []
+      },
+      "chl_pendientes": 1
+    },
+    "7": {
+      "id": 7,
+      "padre": 7,
+      "visitado": false,
+      "sin_visitar": [
+        6
+      ],
+      "chl_edo_canal": {
+        "6": []
+      },
+      "chl_pendientes": 0
+    }
+  },
+  "estados_canales": {
+    "2": {
+      "1": []
+    },
+    "1": {
+      "2": [],
+      "3": [],
+      "4": [
+        "DESCUBRE"
+      ]
+    },
+    "3": {
+      "1": [],
+      "4": []
+    },
+    "4": {
+      "1": [],
+      "3": [],
+      "5": []
+    },
+    "7": {
+      "6": []
+    },
+    "5": {
+      "4": [],
+      "6": []
+    },
+    "6": {
+      "7": [],
+      "5": []
+    }
+  }
+}
