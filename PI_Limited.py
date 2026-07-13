@@ -13,7 +13,7 @@ class AlgoritmoABIL(Model):
         self.resultados = set()
 
     def receive(self, event):
-        if event.getName() == "INICIA":
+        if event.getName() == "INICIA": #(ttl, producto_buscado)
             payload = event.getPayload()
             ttl = payload[0]
             producto_buscado = payload[1]
@@ -22,29 +22,25 @@ class AlgoritmoABIL(Model):
             print(f"[t={self.clock}] Nodo {self.id} INICIA busqueda del producto "
                   f"{producto_buscado} con TTL={ttl}")
 
-            nodos_encontrados = []
             if producto_buscado in self.productos:
-                nodos_encontrados.append(self.id)
                 self.resultados.add(self.id)
                 print(f"  -> Nodo {self.id} TIENE el producto {producto_buscado}")
 
             if ttl > 0:
                 for v in self.neighbors:
                     newevent = Event("M", self.clock + 1, v, self.id,
-                                     [ttl - 1, producto_buscado, self.id,
-                                      list(nodos_encontrados)])
+                                     [ttl - 1, producto_buscado, self.id])
                     self.transmit(newevent)
                     AlgoritmoABIL.total_mensajes += 1
             else:
                 print(f"[t={self.clock}] TTL=0, solo se verifico el emisor")
 
 
-        elif event.getName() == "M": # (ttl, producto, emisor, lista)
+        elif event.getName() == "M": # (ttl, producto, emisor)
             payload = event.getPayload()
             ttl = payload[0]
             producto_buscado = payload[1]
             emisor_id = payload[2]
-            nodos_encontrados = list(payload[3])  # Copia para no mutar el original
 
             if not self.visitado:
                 self.visitado = True
@@ -53,31 +49,24 @@ class AlgoritmoABIL(Model):
                       f"{event.getSource()}, TTL={ttl}")
 
                 if producto_buscado in self.productos:
-                    nodos_encontrados.append(self.id)
-                    print(f"  -> Nodo {self.id} TIENE producto {producto_buscado}")
+                    # Enviar mensaje ENCONTRADO directo al emisor
+                    aviso = Event("ENCONTRADO", self.clock + 1, emisor_id, self.id, self.id)
+                    self.transmit(aviso)
+                    AlgoritmoABIL.total_mensajes += 1
+                    print(f"  -> Nodo {self.id} TIENE producto {producto_buscado}, avisa a {emisor_id}")
 
                 if ttl > 0:
                     for v in self.neighbors:
                         if v != event.getSource():
                             newevent = Event("M", self.clock + 1, v, self.id,
-                                             [ttl - 1, producto_buscado, emisor_id,
-                                              list(nodos_encontrados)])
+                                             [ttl - 1, producto_buscado, emisor_id])
                             self.transmit(newevent)
                             AlgoritmoABIL.total_mensajes += 1
-                else:
-                    print(f"  Nodo {self.id} (hoja TTL=0), envia RETORNO "
-                          f"a emisor {emisor_id} con nodos={nodos_encontrados}")
-                    newevent = Event("RETORNO", self.clock + 1, emisor_id,
-                                     self.id, nodos_encontrados)
-                    self.transmit(newevent)
-                    AlgoritmoABIL.total_mensajes += 1
 
-        elif event.getName() == "RETORNO":
-            nodos = event.getPayload()
-            for n in nodos:
-                self.resultados.add(n)
-            print(f"[t={self.clock}] Nodo {self.id} recibe RETORNO de "
-                  f"{event.getSource()}: nodos={nodos}")
+        elif event.getName() == "ENCONTRADO":
+            nodo_que_lo_tiene = event.getPayload()
+            self.resultados.add(nodo_que_lo_tiene)
+            print(f"[t={self.clock}] Nodo {self.id} notificado: nodo {nodo_que_lo_tiene} tiene el producto")
 
 
 ## main
@@ -86,10 +75,10 @@ if len(sys.argv) != 2:
     print("Uso: python PI_Limited.py <archivo_topologia>")
     raise SystemExit(1)
 
-#random.seed(123)  # Semilla para reproducibilidad
+random.seed(1323)  # Semilla para reproducibilidad
 
 experiment = Simulation(sys.argv[1], 100)
-TTL = 5
+TTL = 3
 producto_buscado = random.randint(1, 100)
 
 for i in range(1, len(experiment.graph) + 1):

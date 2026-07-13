@@ -110,7 +110,7 @@ def imprimir_estadisticas(adj):
 
 if __name__ == '__main__':
     # Parámetros configurables
-    n = 50
+    n = 200
     min_grado = 4
     max_grado = 7
     semilla = 42
