@@ -1,8 +1,10 @@
 {
   "id": 2,
-  "padre": 1,
-  "visitado": true,
-  "sin_visitar": [],
+  "padre": 2,
+  "visitado": false,
+  "sin_visitar": [
+    1
+  ],
   "chl_edo_canal": {
     "1": []
   },

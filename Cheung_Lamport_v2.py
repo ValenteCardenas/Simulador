@@ -177,9 +177,7 @@ class AlgoritmCheungLamport(Model):
                     with open("estado_global.json", "w", encoding="utf-8") as f:
                         json.dump(estado_global, f, ensure_ascii=False, indent=2)
                     print("=== ESTADO GLOBAL guardado en estado_global.json ===")
-        elif nombre == "chl_m":
-            if self.chl_estado_guardado and not self.chl_canales_marcados[origen]:
-                self.chl_edo_canal[origen].append(event.getPayload())
+
 
 
 ###main

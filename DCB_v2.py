@@ -12,6 +12,10 @@ RETRASOS = {
     (2, 3): 1,   # P2 → P3
 }
 
+#Necesitamos un umbral de envio para que P2 no envie hasta recibir el mensaje de P1
+#Si P3 no tuviera un umbral de envio, enviaria el mensaje inmediatamente
+#de esta forma provocamos que el mensaje de P1 sea recibido antes que el de P3
+#y provocamos el bloqueo de P2
 UMBRAL_ENVIO = {
     1: 1,
     2: 2,

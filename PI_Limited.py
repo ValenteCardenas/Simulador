@@ -4,7 +4,7 @@ from event import Event
 from model import Model
 from simulation import Simulation
 
-class AlgoritnmPIFShegallLimited(Model):
+class AlgoritnmPIShegallLimited(Model):
 
     def init(self):
         self.visitado = False
@@ -65,7 +65,7 @@ TTL = 3
 Buscado = random.randint(1, 100)
 payload = [TTL, Buscado]
 for i in range(1, len(experiment.graph) + 1):
-    m = AlgoritnmPIFShegallLimited()
+    m = AlgoritnmPIShegallLimited()
     experiment.setModel(m, i)
 
 seed = Event("INICIA", 0.0, 1, 1, payload)
